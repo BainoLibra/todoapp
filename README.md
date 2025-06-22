@@ -1,0 +1,2 @@
+# todoapp
+This project is a simple RESTful API for managing a To-Do list, built using Node.js and Express. It allows users to create, read, update, and delete (CRUD) to-do items through HTTP requests.  The app stores data in memory, meaning the data resets when the server restarts. It's a great foundation for learning backend development and can later be extended with a real database and frontend interface.
