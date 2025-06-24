@@ -31,3 +31,60 @@ http://localhost:3000/api/todos
 {
 "title": "Read ECMAScript docs"
 }
+
+Usrer Login and Regisration
+
+## 🔐 User Authentication (Login/Register)
+
+The API now supports basic user authentication using `bcrypt` for password hashing and `jsonwebtoken` (JWT) for login tokens.
+
+### 📌 Register a New User
+**POST** `/api/register`
+
+**Request Body (JSON):**
+```json
+{
+  "username": "exampleuser",
+  "password": "securepassword"
+}
+
+Response:
+{
+  "id": 1,
+  "username": "exampleuser"
+}
+
+Login Existing User
+POST /api/login
+
+Request Body (JSON):
+{
+  "username": "exampleuser",
+  "password": "securepassword"
+}
+
+Response:
+{
+  "token": "your.jwt.token"
+}
+
+Use this token to access protected routes by including it in the Authorization header:
+
+Authorization: Bearer your.jwt.token
+
+Example Protected Route
+You can protect routes like /api/todos using a JWT middleware.
+
+app.get('/api/todos', authenticateToken, (req, res) => {
+  // Only accessible with valid token
+});
+
+Dependencies
+express
+
+sqlite3 (or better-sqlite3)
+
+bcrypt
+
+jsonwebtoken
+
