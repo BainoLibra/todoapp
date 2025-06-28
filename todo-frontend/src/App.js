@@ -1,24 +1,24 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import Navbar from './components/Navbar';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
 
+export default function App() {
+  const [user, setUser] = useState(() => {
+    const token = localStorage.getItem('token');
+    return token ? { username: JSON.parse(atob(token.split('.')[1])).username } : null;
+  });
 
-function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar user={user} setUser={setUser} />
+      <Routes>
+        <Route path="/" element={user ? <h2 style={{ padding: '2rem' }}>Welcome!</h2> : <Navigate to="/login" />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </>
   );
 }
-
-export default App;
