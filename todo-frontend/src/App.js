@@ -17,12 +17,27 @@ export default function App() {
     <>
       <Navbar user={user} setUser={setUser} />
       <Routes>
-        <Route path="/" element={user ? <h2 style={{ padding: '2rem' }}>Welcome!</h2> : <Navigate to="/login" />} />
+        {/* <Route path="/" element={user ? <h2 style={{ padding: '2rem' }}>Welcome!</h2> : <Navigate to="/login" />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="/" element={user ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/todos" element={user ? <TodoList /> : <Navigate to="/login" />} />
+        <Route path="/todos" element={user ? <TodoList /> : <Navigate to="/login" />} /> */}
+
+        <Route
+    path="/"
+    element={user ? <Dashboard /> : <Navigate to="/login" />}
+  />
+
+  <Route path="/login" element={<Login setUser={setUser} />} />
+  <Route path="/register" element={<Register />} />
+
+  <Route
+    path="/todos"
+    element={user ? <TodoList /> : <Navigate to="/login" />}
+  />
+
+  <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   );
