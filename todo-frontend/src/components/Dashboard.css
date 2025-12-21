@@ -57,9 +57,9 @@
   background: var(--bg-secondary);
   border: 2px solid var(--border-color);
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 10px var(--shadow);
@@ -270,8 +270,8 @@
   .theme-toggle {
     top: 0.5rem;
     right: 0.5rem;
-    width: 45px;
-    height: 45px;
-    font-size: 1.2rem;
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
   }
 }
