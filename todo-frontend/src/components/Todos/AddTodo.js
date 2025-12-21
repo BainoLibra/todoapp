@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../../api/axios';
+import './AddTodo.css';
 
 function AddTodo() {
   const [title, setTitle] = useState('');
@@ -23,27 +24,25 @@ function AddTodo() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Add New Todo</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="title" style={{ display: 'block', marginBottom: '0.5rem' }}>Todo Title:</label>
+    <div className="add-todo-container">
+      <h2 className="add-todo-title">Add New Todo</h2>
+      <form onSubmit={handleSubmit} className="add-todo-form">
+        <div className="form-group">
+          <label htmlFor="title" className="form-label">Todo Title:</label>
           <input
             type="text"
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter todo title..."
-            style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+            className="form-input"
             required
           />
         </div>
-        <button type="submit" style={{ padding: '0.5rem 1rem', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Add Todo
-        </button>
+        <button type="submit" className="submit-button">Add Todo</button>
       </form>
-      {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
-      {success && <p style={{ color: 'green', marginTop: '1rem' }}>{success}</p>}
+      {error && <div className="message error-message">{error}</div>}
+      {success && <div className="message success-message">{success}</div>}
     </div>
   );
 }

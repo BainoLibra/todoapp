@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/axios';
+import './TodoList.css';
 
 function TodoList() {
   const [todos, setTodos] = useState([]);
@@ -39,29 +40,30 @@ function TodoList() {
     }
   };
 
-  if (loading) return <div style={{ padding: '2rem' }}>Loading todos...</div>;
-  if (error) return <div style={{ padding: '2rem', color: 'red' }}>{error}</div>;
+  if (loading) return <div className="loading">Loading todos...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>My Todos</h2>
+    <div className="todo-list-container">
+      <h2 className="todo-list-title">My Todos</h2>
       {todos.length === 0 ? (
-        <p>No todos yet.</p>
+        <p className="empty-state">No todos yet.</p>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <ul className="todo-list">
           {todos.map(todo => (
-            <li key={todo.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem', border: '1px solid #eee', borderRadius: '4px', marginBottom: '0.5rem' }}>
+            <li key={todo.id} className="todo-item">
               <input
                 type="checkbox"
                 checked={todo.completed}
                 onChange={() => toggleTodo(todo.id, todo.completed)}
+                className="todo-checkbox"
               />
-              <span style={{ flex: '1', textDecoration: todo.completed ? 'line-through' : 'none' }}>
+              <span className={`todo-title ${todo.completed ? 'completed' : ''}`}>
                 {todo.title}
               </span>
               <button
                 onClick={() => deleteTodo(todo.id)}
-                style={{ padding: '0.25rem 0.5rem', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                className="delete-button"
               >
                 Delete
               </button>

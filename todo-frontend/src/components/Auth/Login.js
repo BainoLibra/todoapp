@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../api/axios';
+import './Auth.css';
 
 export default function Login({ setUser }) {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -21,15 +22,16 @@ export default function Login({ setUser }) {
   }
 
   return (
-    <div style={{ maxWidth: 400, margin: '3rem auto' }}>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div className="auth-container">
+      <h2 className="auth-title">Login</h2>
+      {error && <div className="auth-error">{error}</div>}
+      <form onSubmit={submit} className="auth-form">
         <input
           required
           placeholder="Username"
           value={form.username}
           onChange={(e) => setForm({ ...form, username: e.target.value })}
+          className="auth-input"
         />
         <input
           required
@@ -37,12 +39,13 @@ export default function Login({ setUser }) {
           placeholder="Password"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
+          className="auth-input"
         />
-        <button>Login</button>
+        <button type="submit" className="auth-button">Login</button>
       </form>
-      <p style={{ marginTop: 8 }}>
+      <div className="auth-link">
         No account? <Link to="/register">Register</Link>
-      </p>
+      </div>
     </div>
   );
 }

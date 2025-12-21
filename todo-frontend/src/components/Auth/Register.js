@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../api/axios';
+import './Auth.css';
 
 export default function Register() {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -20,16 +21,17 @@ export default function Register() {
   }
 
   return (
-    <div style={{ maxWidth: 400, margin: '3rem auto' }}>
-      <h2>Register</h2>
-      {msg && <p style={{ color: 'green' }}>{msg}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div className="auth-container">
+      <h2 className="auth-title">Register</h2>
+      {msg && <div style={{ background: '#d4edda', color: '#155724', padding: '0.75rem', borderRadius: '6px', border: '1px solid #c3e6cb', marginBottom: '1rem', textAlign: 'center' }}>{msg}</div>}
+      {error && <div className="auth-error">{error}</div>}
+      <form onSubmit={submit} className="auth-form">
         <input
           required
           placeholder="Username"
           value={form.username}
           onChange={(e) => setForm({ ...form, username: e.target.value })}
+          className="auth-input"
         />
         <input
           required
@@ -37,12 +39,13 @@ export default function Register() {
           placeholder="Password"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
+          className="auth-input"
         />
-        <button>Register</button>
+        <button type="submit" className="auth-button">Register</button>
       </form>
-      <p style={{ marginTop: 8 }}>
+      <div className="auth-link">
         Already have an account? <Link to="/login">Login</Link>
-      </p>
+      </div>
     </div>
   );
 }

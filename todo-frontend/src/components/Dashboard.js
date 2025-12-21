@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
+import './Dashboard.css';
 
 export default function Dashboard() {
   const [todos, setTodos] = useState([]);
@@ -58,78 +59,79 @@ export default function Dashboard() {
   const pendingTodos = totalTodos - completedTodos;
   const completionRate = totalTodos > 0 ? Math.round((completedTodos / totalTodos) * 100) : 0;
 
-  if (loading) return <div style={{ padding: '2rem' }}>Loading dashboard...</div>;
-  if (error) return <div style={{ padding: '2rem', color: 'red' }}>{error}</div>;
+  if (loading) return <div className="loading">Loading dashboard...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="dashboard">
       <h1>Dashboard</h1>
 
       {/* Statistics Cards */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-        <div style={{ flex: '1', minWidth: '200px', padding: '1rem', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+      <div className="stats-grid">
+        <div className="stat-card">
           <h3>Total Todos</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#333' }}>{totalTodos}</p>
+          <p>{totalTodos}</p>
         </div>
-        <div style={{ flex: '1', minWidth: '200px', padding: '1rem', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+        <div className="stat-card">
           <h3>Completed</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#28a745' }}>{completedTodos}</p>
+          <p>{completedTodos}</p>
         </div>
-        <div style={{ flex: '1', minWidth: '200px', padding: '1rem', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+        <div className="stat-card">
           <h3>Pending</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ffc107' }}>{pendingTodos}</p>
+          <p>{pendingTodos}</p>
         </div>
-        <div style={{ flex: '1', minWidth: '200px', padding: '1rem', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+        <div className="stat-card">
           <h3>Completion Rate</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#007bff' }}>{completionRate}%</p>
+          <p>{completionRate}%</p>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div style={{ marginBottom: '2rem' }}>
+      <div className="progress-section">
         <h3>Progress</h3>
-        <div style={{ width: '100%', height: '20px', backgroundColor: '#e9ecef', borderRadius: '10px', overflow: 'hidden' }}>
-          <div style={{ width: `${completionRate}%`, height: '100%', backgroundColor: '#28a745', transition: 'width 0.3s ease' }}></div>
+        <div className="progress-bar">
+          <div className="progress-fill" style={{ width: `${completionRate}%` }}></div>
         </div>
       </div>
 
       {/* Quick Add Todo */}
-      <div style={{ marginBottom: '2rem' }}>
+      <div className="quick-add">
         <h3>Quick Add Todo</h3>
-        <form onSubmit={addTodo} style={{ display: 'flex', gap: '0.5rem' }}>
+        <form onSubmit={addTodo} className="add-form">
           <input
             type="text"
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
             placeholder="Enter new todo..."
-            style={{ flex: '1', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+            className="add-input"
           />
-          <button type="submit" style={{ padding: '0.5rem 1rem', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          <button type="submit" className="add-button">
             Add
           </button>
         </form>
       </div>
 
       {/* Recent Todos */}
-      <div>
+      <div className="todos-section">
         <h3>Recent Todos</h3>
         {todos.length === 0 ? (
-          <p>No todos yet. Add your first todo above!</p>
+          <p className="empty-state">No todos yet. Add your first todo above!</p>
         ) : (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <ul className="todos-list">
             {todos.slice(0, 10).map(todo => (
-              <li key={todo.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem', border: '1px solid #eee', borderRadius: '4px', marginBottom: '0.5rem' }}>
+              <li key={todo.id} className="todo-item">
                 <input
                   type="checkbox"
                   checked={todo.completed}
                   onChange={() => toggleTodo(todo.id, todo.completed)}
+                  className="todo-checkbox"
                 />
-                <span style={{ flex: '1', textDecoration: todo.completed ? 'line-through' : 'none' }}>
+                <span className={`todo-title ${todo.completed ? 'completed' : ''}`}>
                   {todo.title}
                 </span>
                 <button
                   onClick={() => deleteTodo(todo.id)}
-                  style={{ padding: '0.25rem 0.5rem', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  className="delete-button"
                 >
                   Delete
                 </button>
