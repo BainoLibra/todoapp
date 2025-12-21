@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
+import StatCard from './StatCard';
+import TodoItem from './TodoItem';
 import './Dashboard.css';
 
 export default function Dashboard() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
+  const [newCategory, setNewCategory] = useState('personal');
+  const [newPriority, setNewPriority] = useState('medium');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     fetchTodos();
+    // Load theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      setDarkMode(true);
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
   }, []);
 
   const fetchTodos = async () => {
@@ -28,9 +39,15 @@ export default function Dashboard() {
     if (!newTodo.trim()) return;
 
     try {
-      const response = await api.post('/todos', { title: newTodo });
-      setTodos([...todos, response.data]);
+      const response = await api.post('/todos', {
+        title: newTodo,
+        category: newCategory,
+        priority: newPriority
+      });
+      setTodos([response.data, ...todos]);
       setNewTodo('');
+      setNewCategory('personal');
+      setNewPriority('medium');
     } catch (err) {
       setError('Failed to add todo');
     }
@@ -54,6 +71,13 @@ export default function Dashboard() {
     }
   };
 
+  const toggleTheme = () => {
+    const newTheme = !darkMode;
+    setDarkMode(newTheme);
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', newTheme ? 'dark' : 'light');
+  };
+
   const totalTodos = todos.length;
   const completedTodos = todos.filter(todo => todo.completed).length;
   const pendingTodos = totalTodos - completedTodos;
@@ -64,26 +88,43 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
+      {/* Theme Toggle */}
+      <button
+        onClick={toggleTheme}
+        className="theme-toggle"
+        aria-label="Toggle theme"
+      >
+        {darkMode ? '☀️' : '🌙'}
+      </button>
+
       <h1>Dashboard</h1>
 
       {/* Statistics Cards */}
       <div className="stats-grid">
-        <div className="stat-card">
-          <h3>Total Todos</h3>
-          <p>{totalTodos}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Completed</h3>
-          <p>{completedTodos}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Pending</h3>
-          <p>{pendingTodos}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Completion Rate</h3>
-          <p>{completionRate}%</p>
-        </div>
+        <StatCard
+          title="Total Todos"
+          value={totalTodos}
+          icon="📋"
+          color="primary"
+        />
+        <StatCard
+          title="Completed"
+          value={completedTodos}
+          icon="✅"
+          color="success"
+        />
+        <StatCard
+          title="Pending"
+          value={pendingTodos}
+          icon="⏳"
+          color="warning"
+        />
+        <StatCard
+          title="Completion Rate"
+          value={`${completionRate}%`}
+          icon="📊"
+          color="danger"
+        />
       </div>
 
       {/* Progress Bar */}
@@ -105,8 +146,32 @@ export default function Dashboard() {
             placeholder="Enter new todo..."
             className="add-input"
           />
+
+          <div className="form-row">
+            <select
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              className="add-select"
+            >
+              <option value="personal">👤 Personal</option>
+              <option value="work">💼 Work</option>
+              <option value="health">🏥 Health</option>
+              <option value="learning">📚 Learning</option>
+            </select>
+
+            <select
+              value={newPriority}
+              onChange={(e) => setNewPriority(e.target.value)}
+              className="add-select"
+            >
+              <option value="low">🟢 Low</option>
+              <option value="medium">🟡 Medium</option>
+              <option value="high">🔴 High</option>
+            </select>
+          </div>
+
           <button type="submit" className="add-button">
-            Add
+            Add Todo
           </button>
         </form>
       </div>
@@ -117,27 +182,16 @@ export default function Dashboard() {
         {todos.length === 0 ? (
           <p className="empty-state">No todos yet. Add your first todo above!</p>
         ) : (
-          <ul className="todos-list">
+          <div className="todos-list">
             {todos.slice(0, 10).map(todo => (
-              <li key={todo.id} className="todo-item">
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => toggleTodo(todo.id, todo.completed)}
-                  className="todo-checkbox"
-                />
-                <span className={`todo-title ${todo.completed ? 'completed' : ''}`}>
-                  {todo.title}
-                </span>
-                <button
-                  onClick={() => deleteTodo(todo.id)}
-                  className="delete-button"
-                >
-                  Delete
-                </button>
-              </li>
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                onToggle={toggleTodo}
+                onDelete={deleteTodo}
+              />
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

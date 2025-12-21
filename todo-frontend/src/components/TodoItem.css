@@ -1,0 +1,125 @@
+/* TodoItem.css */
+.todo-item {
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.todo-item:hover {
+  background: var(--bg-secondary);
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px var(--shadow-light);
+}
+
+.todo-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--accent-green);
+  flex-shrink: 0;
+}
+
+.todo-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.todo-title {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin: 0;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.todo-title.completed {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.todo-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.todo-category, .todo-priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Category Styles */
+.todo-category--work { background: rgba(26, 115, 232, 0.1); color: #1a73e8; }
+.todo-category--personal { background: rgba(52, 168, 83, 0.1); color: #34a853; }
+.todo-category--health { background: rgba(251, 188, 4, 0.1); color: #fbbc04; }
+.todo-category--learning { background: rgba(234, 67, 53, 0.1); color: #ea4335; }
+
+/* Priority Styles */
+.todo-priority--high { background: rgba(234, 67, 53, 0.1); color: #ea4335; }
+.todo-priority--medium { background: rgba(251, 188, 4, 0.1); color: #fbbc04; }
+.todo-priority--low { background: rgba(52, 168, 83, 0.1); color: #34a853; }
+
+.delete-button {
+  padding: 0.5rem 1rem;
+  background: var(--gradient-danger);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.delete-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 67, 53, 0.3);
+}
+
+.delete-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .todo-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .todo-meta {
+    flex-wrap: wrap;
+  }
+
+  .delete-button {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .todo-item {
+    padding: 1rem;
+  }
+
+  .todo-title {
+    font-size: 0.95rem;
+  }
+}

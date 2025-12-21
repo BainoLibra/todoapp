@@ -19,7 +19,12 @@ const db = new sqlite3.Database('./todos.db', (err) => {
 db.run(`CREATE TABLE IF NOT EXISTS todos (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
-  completed INTEGER DEFAULT 0
+  completed INTEGER DEFAULT 0,
+  category TEXT DEFAULT 'personal',
+  priority TEXT DEFAULT 'medium',
+  user_id INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users (id)
 )`);
 
 db.run(`CREATE TABLE IF NOT EXISTS users (
@@ -80,7 +85,7 @@ function authenticateToken(req, res, next) {
 
 // Get all todos (protected)
 app.get('/api/todos', authenticateToken, (req, res) => {
-  db.all('SELECT * FROM todos', [], (err, rows) => {
+  db.all('SELECT * FROM todos WHERE user_id = ? ORDER BY created_at DESC', [req.user.userId], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
@@ -88,7 +93,7 @@ app.get('/api/todos', authenticateToken, (req, res) => {
 
 // Get a single todo
 app.get('/api/todos/:id', authenticateToken, (req, res) => {
-  db.get('SELECT * FROM todos WHERE id = ?', [req.params.id], (err, row) => {
+  db.get('SELECT * FROM todos WHERE id = ? AND user_id = ?', [req.params.id, req.user.userId], (err, row) => {
     if (err) return res.status(500).json({ error: err.message });
     if (!row) return res.status(404).send('Todo not found');
     res.json(row);
@@ -97,30 +102,38 @@ app.get('/api/todos/:id', authenticateToken, (req, res) => {
 
 // Add a new todo
 app.post('/api/todos', authenticateToken, (req, res) => {
-  const { title } = req.body;
-  db.run('INSERT INTO todos (title) VALUES (?)', [title], function (err) {
+  const { title, category = 'personal', priority = 'medium' } = req.body;
+  db.run('INSERT INTO todos (title, category, priority, user_id) VALUES (?, ?, ?, ?)',
+    [title, category, priority, req.user.userId], function (err) {
     if (err) return res.status(500).json({ error: err.message });
-    res.status(201).json({ id: this.lastID, title, completed: 0 });
+    res.status(201).json({
+      id: this.lastID,
+      title,
+      completed: 0,
+      category,
+      priority,
+      user_id: req.user.userId
+    });
   });
 });
 
 // Update a todo
 app.put('/api/todos/:id', authenticateToken, (req, res) => {
-  const { title, completed } = req.body;
+  const { title, completed, category, priority } = req.body;
   db.run(
-    'UPDATE todos SET title = ?, completed = ? WHERE id = ?',
-    [title, completed, req.params.id],
+    'UPDATE todos SET title = ?, completed = ?, category = ?, priority = ? WHERE id = ? AND user_id = ?',
+    [title, completed, category, priority, req.params.id, req.user.userId],
     function (err) {
       if (err) return res.status(500).json({ error: err.message });
       if (this.changes === 0) return res.status(404).send('Todo not found');
-      res.json({ id: req.params.id, title, completed });
+      res.json({ id: req.params.id, title, completed, category, priority });
     }
   );
 });
 
 // Delete a todo
 app.delete('/api/todos/:id', authenticateToken, (req, res) => {
-  db.run('DELETE FROM todos WHERE id = ?', [req.params.id], function (err) {
+  db.run('DELETE FROM todos WHERE id = ? AND user_id = ?', [req.params.id, req.user.userId], function (err) {
     if (err) return res.status(500).json({ error: err.message });
     if (this.changes === 0) return res.status(404).send('Todo not found');
     res.status(204).send();
