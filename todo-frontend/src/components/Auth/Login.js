@@ -13,6 +13,7 @@ export default function Login({ setUser }) {
     e.preventDefault();
     try {
       const { data } = await api.post('/login', form);
+      console.log('LOGIN RESPONSE:', data);
       localStorage.setItem('token', data.token);
       const payload = JSON.parse(atob(data.token.split('.')[1]));
       setUser({ username: payload.username });
