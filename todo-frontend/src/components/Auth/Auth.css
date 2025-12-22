@@ -30,6 +30,28 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.password-input-container {
+  position: relative;
+}
+
+.password-input-container .auth-input {
+  padding-right: 3rem; /* Make space for the icon */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6c757d;
+  transition: color 0.2s ease;
+}
+
+.password-toggle-icon:hover {
+  color: #007bff;
+}
+
 .auth-input:focus {
   outline: none;
   border-color: #007bff;

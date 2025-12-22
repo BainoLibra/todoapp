@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-const port = 3000;
+const port = 3001;
 const SECRET_KEY = 'your_secret_key'; // Replace with an environment variable in production
 
 app.use(express.json());
