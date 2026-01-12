@@ -142,6 +142,9 @@ app.delete('/api/todos/:id', authenticateToken, (req, res) => {
 
 // -------------------- START SERVER --------------------
 
+app.get('/', (req, res) => {
+  res.send('Backend is running 🚀');
+});
 app.listen(port, () => {
   console.log(`Todo API with auth running at http://localhost:${port}`);
 });
